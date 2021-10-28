@@ -3,16 +3,22 @@ const stopBtn = document.querySelector('[data-stop]');
 let timerId = null;
 
 startBtn.addEventListener("click", () => {
-  timerId = setInterval(() => {
-    console.log(`I love async JS!  ${getRandomHexColor()}`);
-  }, 1000);
+  timerId = setInterval(() => document.body.style.backgroundColor = getRandomHexColor(), 1000);
+  toggleBtnsActiveStatus();
 });
 
 
 stopBtn.addEventListener("click", () => {
   clearInterval(timerId);
-  console.log(`Interval with id ${timerId} has stopped!`);
+  toggleBtnsActiveStatus();
 });
+
+
+function toggleBtnsActiveStatus() {
+  refs.startBtn.toggleAttribute('disabled');
+  refs.stopBtn.toggleAttribute('disabled');
+}
+
 
 function getRandomHexColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
