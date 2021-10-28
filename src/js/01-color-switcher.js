@@ -5,17 +5,17 @@ let timerId = null;
 
 startBtn.addEventListener("click", () => {
   timerId = setInterval(() => (document.body.style.backgroundColor = getRandomHexColor()), 1000);
-  toggleBtnsActiveStatus();
+  BtnStut();
 });
 
 
 stopBtn.addEventListener("click", () => {
   clearInterval(timerId);
-  toggleBtnsActiveStatus();
+  BtnStut();
 });
 
 
-function toggleBtnsActiveStatus() {
+function BtnStut() {
   startBtn.toggleAttribute('disabled');
   stopBtn.toggleAttribute('disabled');
 }

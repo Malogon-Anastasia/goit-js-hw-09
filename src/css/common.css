@@ -16,3 +16,15 @@ img {
   display: block;
   max-width: 100%;
 }
+.btn-container {
+  text-align: center;
+}
+.btn {
+  background: rgb(226, 186, 186);
+          border: 1px solid rgb(30, 19, 128);
+          padding: 10px;
+          border-radius: 10px;
+          cursor: pointer;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+}
