@@ -4,13 +4,14 @@ const refs = {
   delayField: document.querySelector('input[name="delay"]'),
   stepField: document.querySelector('input[name="step"]'),
   amountField: document.querySelector('input[name="amount"]'),
-  btn: document.querySelector('.js-btn'),
+  btn: document.querySelector('button[type="submit"]'),
   };
 
 refs.btn.addEventListener('click', onBtnClick);
 
 function onBtnClick(e) {
   e.preventDefault();
+  
   const { delayField, stepField, amountField } = refs;
   
   const amount = +amountField.value;
@@ -26,7 +27,7 @@ function onBtnClick(e) {
     .catch(({ position, delay }) => {
       Notify.failure(`Rejected promise ${position} in ${delay}ms`);
     });
-  delay += step;
+    delay += step;
 }
 }
 
