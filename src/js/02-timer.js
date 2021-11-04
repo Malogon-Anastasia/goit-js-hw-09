@@ -1,36 +1,63 @@
 import flatpickr from 'flatpickr';
-import { Notify } from 'notiflix';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 import 'flatpickr/dist/flatpickr.min.css';
 import 'notiflix/dist/notiflix-3.1.0.min.css';
-const MESSAGE = 'Please choose a date in the future'
+
 const refs = {
+  inputEl: document.querySelector('#datetime-picker'),
   startBtn: document.querySelector('[data-start]'),
-  stopBtn: document.querySelector('[data-stop]'),
   daysLeft: document.querySelector('[data-days]'),
   hoursLeft: document.querySelector('[data-hours]'),
   minutesLeft: document.querySelector('[data-minutes]'),
   secondsLeft: document.querySelector('[data-seconds]'),
 };
 
-let timeSelected;
-let intervalId;
-let isActive = false;
+let intervalId = null;
 
-const options = {
+
+const fp = flatpickr('#datetime-picker', {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onChange() {
-    refs.startBtn.removeAttribute('disabled');
-  },
   onClose(selectedDates) {
-    timeSelected = Date.parse(selectedDates);
+    if (+selectedDates[0] < Date.now()) {
+      Notify.failure('Please choose a date in the future');
+      StartBtnState();
+      return;
+    } else {
+      refs.startBtn.disabled = false;
+    }
   },
-};
+});
 
-flatpickr('#datetime-picker', options);
+refs.startBtn.addEventListener('click', start);
+
+StartBtnState();
+
+function StartBtnState() {
+  refs.startBtn.disabled = true;
+}
+
+function start() {
+  const targetDate = Number(fp.selectedDates[0]);
+
+  intervalId = setInterval(() => {
+    if (targetDate <= Date.now()) {
+      clearInterval(intervalId);
+      refs.inputEl.disabled = false;
+      return;
+    }
+    const { days, hours, minutes, seconds } = convertMs(targetDate - Date.now());
+    refs.daysLeft.innerHTML = pad(days);
+    refs.hoursLeft.innerHTML = pad(hours);
+    refs.minutesLeft.innerHTML = pad(minutes);
+    refs.secondsLeft.innerHTML = pad(seconds);
+  }, 1000);
+  refs.inputEl.disabled = true;
+  StartBtnState();
+}
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -51,51 +78,10 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-function start() {
-  if (isActive) {
-    return;
-  }
-
-  if (timeSelected - Date.now() <= 0) {
-    Notify.failure(MESSAGE, { clickToClose: true });
-    return;
-  }
-
-  intervalId = setIntervalImmediately(timeUpdate, 1000);
-  isActive = true;
-}
-
-function timeUpdate() {
-  const timeLeft = timeSelected - Date.now();
-  if (timeLeft < 0) {
-    clearInterval(intervalId);
-    isActive = false;
-    return;
-  }
-  const time = convertMs(timeLeft);
-  updateInterface(time);
-}
-
-function stop() {
-  isActive = false;
-  clearInterval(intervalId);
-}
-
-function updateInterface({ days, hours, minutes, seconds }) {
-  refs.daysLeft.textContent = pad(days);
-  refs.hoursLeft.textContent = pad(hours);
-  refs.minutesLeft.textContent = pad(minutes);
-  refs.secondsLeft.textContent = pad(seconds);
-}
 
 function pad(value) {
   return String(value).padStart(2, '0');
 }
 
-function setIntervalImmediately(func, interval) {
-  func();
-  return setInterval(func, interval);
-}
 
-refs.startBtn.addEventListener('click', start);
-refs.stopBtn.addEventListener('click', stop);
+
