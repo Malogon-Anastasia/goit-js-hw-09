@@ -14,6 +14,7 @@ const refs = {
 };
 
 let intervalId = null;
+const MESSAGE = 'Please choose a date in the future';
 
 
 const fp = flatpickr('#datetime-picker', {
@@ -23,7 +24,7 @@ const fp = flatpickr('#datetime-picker', {
   minuteIncrement: 1,
   onClose(selectedDates) {
     if (+selectedDates[0] < Date.now()) {
-      Notify.failure('Please choose a date in the future');
+      Notify.failure(MESSAGE);
       StartBtnState();
       return;
     } else {
