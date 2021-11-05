@@ -28,3 +28,24 @@ img {
           font-weight: 700;
           letter-spacing: 0.04em;
 }
+
+.field {
+display: flex;
+flex-direction: column;
+}
+
+.timer {
+  display: flex;
+  margin-top: 10px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.9;
+  color: rgb(0, 81, 255);
+}
+
+.label {
+  margin-right: 10px;
+  }
+
+ 
