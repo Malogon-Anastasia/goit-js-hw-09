@@ -21,15 +21,19 @@ function onBtnClick(e) {
   for (let i = 0; i < amount ; i ++) {
     const position = i + 1;
     createPromise(position, delay)
-    .then(({ position, delay }) => {
-      Notify.success(`Fulfilled promise ${position} in ${delay}ms`);
-    })
-    .catch(({ position, delay }) => {
-      Notify.failure(`Rejected promise ${position} in ${delay}ms`);
-    });
+    .then(onSuccess)
+    .catch(onFailure);
     delay += step;
 }
 }
+
+function onSuccess({ position, delay }) {
+  Notify.success(`✅ Fulfilled promise ${position} in ${delay}ms`);
+  }
+
+function onFailure({ position, delay }) {
+  Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
+ }
 
 
 function createPromise(position, delay) {
